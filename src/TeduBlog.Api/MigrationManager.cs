@@ -11,8 +11,8 @@ namespace TeduBlog.Api
             {
                 using (var context = scope.ServiceProvider.GetRequiredService<TeduBlogContext>())
                 {
-                    context.Database.Migrate();
-                    new DataSeeder().SeedAsync(context).Wait();
+                    //context.Database.Migrate(); 
+                    //new DataSeeder().SeedAsync(context).Wait();
                 }
             }
             return app;
