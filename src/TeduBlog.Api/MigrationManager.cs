@@ -12,7 +12,7 @@ namespace TeduBlog.Api
                 using (var context = scope.ServiceProvider.GetRequiredService<TeduBlogContext>())
                 {
                     //context.Database.Migrate(); 
-                    //new DataSeeder().SeedAsync(context).Wait();
+                    new DataSeeder().SeedAsync(context).Wait();
                 }
             }
             return app;
