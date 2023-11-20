@@ -33,4 +33,8 @@
     <ProjectReference Include="..\TeduBlog.Core\TeduBlog.Core.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Repositories\Migrations\" />
+  </ItemGroup>
+
 </Project>
