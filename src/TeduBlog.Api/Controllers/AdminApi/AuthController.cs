@@ -1,11 +1,17 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System.IdentityModel.Tokens.Jwt;
+using System.Reflection;
 using System.Security.Claims;
+using System.Text.Json;
+using TeduBlog.Api.Extensions;
 using TeduBlog.Api.Services;
 using TeduBlog.Core.Domain.Identity;
 using TeduBlog.Core.Models.Auth;
+using TeduBlog.Core.Models.System;
 using TeduBlog.Core.SeedWorks.Constants;
+using static TeduBlog.Core.SeedWorks.Constants.Permissions;
+using Roles = TeduBlog.Core.SeedWorks.Constants.Roles;
 
 namespace TeduBlog.Api.Controllers.AdminApi
 {
@@ -16,13 +22,16 @@ namespace TeduBlog.Api.Controllers.AdminApi
         private readonly UserManager<AppUser> _userManager;//??? 
         private readonly SignInManager<AppUser> _signInManager;
         private readonly ITokenService _tokenService;
+        private readonly RoleManager<AppRole> _roleManager; //trong approle có display dùng để làm gì
         public AuthController(UserManager<AppUser> userManager,
             SignInManager<AppUser> signInManager,
-            ITokenService tokenService)
+            ITokenService tokenService,
+            RoleManager<AppRole> roleManager)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _tokenService = tokenService;
+            _roleManager = roleManager;
         }
         [HttpPost]
         public async Task<ActionResult<AuthenticatedResult>> login([FromBody] LoginRequest request)
@@ -44,6 +53,7 @@ namespace TeduBlog.Api.Controllers.AdminApi
             }
             //Authorization
             var roles = await _userManager.GetRolesAsync(user);
+            var permissions = await this.GetPermissionByUserIdAsync(user.Id.ToString());
             var claims = new[]
             {
                 new Claim(JwtRegisteredClaimNames.Email, user.Email),
@@ -52,7 +62,7 @@ namespace TeduBlog.Api.Controllers.AdminApi
                 new Claim(ClaimTypes.Name, user.UserName),
                 new Claim(UserClaims.FirstName, user.FirstName),
                 new Claim(UserClaims.Roles, string.Join(";",roles)),
-                //new Claim(UserClaims.Permissions, JsonSerializer.Serialize(permissions)),
+                new Claim(UserClaims.Permissions, JsonSerializer.Serialize(permissions)),
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
             };
             var accessToken = _tokenService.GennerateAccessToken(claims);
@@ -67,6 +77,34 @@ namespace TeduBlog.Api.Controllers.AdminApi
                 Token = accessToken,
                 RefreshToken = refreshToken
             });
+        }
+        private async Task<List<string>> GetPermissionByUserIdAsync(string userId)
+        {
+            var user = await _userManager.FindByIdAsync(userId);
+            var roles = await _userManager.GetRolesAsync(user);
+            var permission = new List<string>();
+
+            var allPermission = new List<RoleClaimDto>();
+            if (roles.Contains(Roles.Admin))
+            {
+                var types = typeof(Permissions).GetTypeInfo().DeclaredNestedTypes; 
+                foreach (var type in types)
+                {
+                    allPermission.GetPermissions(type);
+                }
+                permission.AddRange(allPermission.Select(x => x.Value));
+            }
+            else
+            {
+                foreach (var roleName in roles)
+                {
+                    var role = await _roleManager.FindByIdAsync(roleName);
+                    var claims = await _roleManager.GetClaimsAsync(role);
+                    var roleClaimValues = claims.Select(x => x.Value).ToList();
+                    permission.AddRange(roleClaimValues);
+                }
+            }
+            return permission.Distinct().ToList();
         }
     }
 }
