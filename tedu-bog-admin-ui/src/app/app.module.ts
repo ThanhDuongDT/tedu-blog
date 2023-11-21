@@ -37,7 +37,8 @@ import {
 } from '@coreui/angular';
 
 import { IconModule, IconSetService } from '@coreui/icons-angular';
-
+import {ADMIN_API_BASE_URL} from './api/admin-api.service.generated'
+import {environment} from './../environments/environment';
 const APP_CONTAINERS = [
   DefaultFooterComponent,
   DefaultHeaderComponent,
@@ -75,6 +76,7 @@ const APP_CONTAINERS = [
     NgScrollbarModule
   ],
   providers: [
+    {provide: ADMIN_API_BASE_URL, useValue: environment.API_URL},
     {
       provide: LocationStrategy,
       useClass: HashLocationStrategy
