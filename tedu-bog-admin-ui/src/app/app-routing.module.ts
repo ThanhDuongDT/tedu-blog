@@ -5,18 +5,19 @@ import { DefaultLayoutComponent } from './containers';
 
 
 const routes: Routes = [
+  
   {
     path: 'auth',
     loadChildren: () =>
       import('./views/auth/auth.module').then((m) => m.AuthModule)
   },
-  
   {
     path: '',
     component: DefaultLayoutComponent,
     data: {
       title: 'Home'
     },
+    
     children: [
       {
         path: 'dashboard',
@@ -33,7 +34,7 @@ const routes: Routes = [
         loadChildren: () =>
           import('./views/content/content.module').then((m) => m.ContentModule)
       },
-    
+      
     ]
   },
   
