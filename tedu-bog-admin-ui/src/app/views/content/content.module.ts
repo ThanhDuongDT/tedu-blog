@@ -18,6 +18,8 @@ import { IconModule } from '@coreui/icons-angular';
 import { ChartjsModule } from '@coreui/angular-chartjs';
 
 import { ContentRoutingModule } from './content-routing.module';
+import { PostComponent } from './posts/post.component';
+import { PostCategoriesComponent } from './post-categories/post-categories.component';
 
 
 @NgModule({
@@ -39,7 +41,7 @@ import { ContentRoutingModule } from './content-routing.module';
     AvatarModule,
     TableModule,
   ],
-  declarations: []
+  declarations: [PostComponent, PostCategoriesComponent]
 })
 export class ContentModule {
 }
