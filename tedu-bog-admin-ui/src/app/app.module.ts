@@ -44,6 +44,7 @@ import { MessageService } from 'primeng/api';
 import {AlertService} from './share/services/alert.service';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import {TokenStorageService} from './share/services/token-storage.service';
+import { AuthGuard } from './share/auth.guard';
 const APP_CONTAINERS = [
   DefaultFooterComponent,
   DefaultHeaderComponent,
@@ -80,7 +81,8 @@ const APP_CONTAINERS = [
     CardModule,
     NgScrollbarModule,
     ToastModule,
-    HttpClientModule
+    HttpClientModule,
+    
   ],
   providers: [
     {provide: ADMIN_API_BASE_URL, useValue: environment.API_URL},
@@ -93,8 +95,9 @@ const APP_CONTAINERS = [
     MessageService,
     AlertService,
     AdminApiAuthApiClient,
-    TokenStorageService
-    
+    TokenStorageService,
+    AuthGuard
+
   ],
   bootstrap: [AppComponent]
 })

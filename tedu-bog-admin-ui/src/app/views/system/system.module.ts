@@ -18,6 +18,7 @@ import { IconModule } from '@coreui/icons-angular';
 import { ChartjsModule } from '@coreui/angular-chartjs';
 
 import { SystemRoutingModule } from './system-routing.module';
+import { UserComponent } from './users/user.component';
 
 
 @NgModule({
@@ -39,7 +40,7 @@ import { SystemRoutingModule } from './system-routing.module';
     AvatarModule,
     TableModule,
   ],
-  declarations: []
+  declarations: [UserComponent]
 })
 export class SystemModule {
 }
