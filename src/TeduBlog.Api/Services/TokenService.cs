@@ -16,7 +16,7 @@ namespace TeduBlog.Api.Services
         {
             _jwtTokenSettings = jwtTokenSetting.Value;
         }
-        public string GennerateAccessToken(IEnumerable<Claim> claims)
+        public string GenerateAccessToken(IEnumerable<Claim> claims)
         {
             var secretKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtTokenSettings.Key));
             var signinCredentials = new SigningCredentials(secretKey, SecurityAlgorithms.HmacSha256);
@@ -31,7 +31,7 @@ namespace TeduBlog.Api.Services
             return tokenString;
         }
 
-        public string GennerateRefreshToken()
+        public string GenerateRefreshToken()
         {
             var ramdomNumber = new byte[32];
             using (var rng = RandomNumberGenerator.Create())

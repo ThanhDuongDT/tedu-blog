@@ -65,8 +65,8 @@ namespace TeduBlog.Api.Controllers.AdminApi
                 new Claim(UserClaims.Permissions, JsonSerializer.Serialize(permissions)),
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
             };
-            var accessToken = _tokenService.GennerateAccessToken(claims);
-            var refreshToken = _tokenService.GennerateRefreshToken();
+            var accessToken = _tokenService.GenerateAccessToken(claims);
+            var refreshToken = _tokenService.GenerateRefreshToken();
 
             user.RefreshToken = refreshToken;
             user.RefreshTokenExpiryTime = DateTime.UtcNow.AddDays(30);
