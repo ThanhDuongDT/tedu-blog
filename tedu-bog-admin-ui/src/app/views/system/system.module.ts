@@ -13,7 +13,9 @@ import { SharedModule } from 'primeng/api';
 import { TableModule } from 'primeng/table';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
-
+import { RolesDetailComponent} from './roles/roles-detail.component'
+import { TeduSharedModule} from 'src/app/share/modules/tedu-shared.module'
+import { KeyFilterModule} from 'primeng/keyfilter'
 @NgModule({
   imports: [
     SystemRoutingModule,
@@ -27,9 +29,11 @@ import { InputTextModule } from 'primeng/inputtext';
     CheckboxModule,
     ButtonModule,
     InputTextModule,
-    SharedModule
+    KeyFilterModule,
+    SharedModule,
+    TeduSharedModule
   ],
-  declarations: [UserComponent,RoleComponent]
+  declarations: [UserComponent,RoleComponent, RolesDetailComponent]
 })
 export class SystemModule {
 }

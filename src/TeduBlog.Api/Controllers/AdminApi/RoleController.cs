@@ -65,7 +65,7 @@ namespace TeduBlog.Api.Controllers.AdminApi
         }
         [HttpGet("{id}")]
         [Authorize(Permissions.Roles.View)]
-        public async Task<ActionResult<RoleDto>> GetRoleId(Guid id)
+        public async Task<ActionResult<RoleDto>> GetRoleById(Guid id)
         {
             var role = await _roleManager.FindByIdAsync(id.ToString());
             if (role == null)

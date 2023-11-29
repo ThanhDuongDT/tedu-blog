@@ -4,7 +4,8 @@ import { Subject, takeUntil } from 'rxjs';
 import { DialogService, DynamicDialogComponent } from 'primeng/dynamicdialog';
 import { AdminApiRoleApiClient, RoleDto, RoleDtoPagedResult } from 'src/app/api/admin-api.service.generated';
 import { AlertService } from 'src/app/share/services/alert.service';
-
+import { RolesDetailComponent } from './roles-detail.component';
+import { MessageConstants} from '../../../share/constants/messages.constant'
 
 @Component({
   selector: 'app-role',
@@ -68,7 +69,84 @@ export class RoleComponent implements OnInit, OnDestroy {
     }
   }
   showPermissionModal(id: string, name: string){}
-  showEditModal(){}
-  showAddModal(){}
-  deleteItems(){}
+  showEditModal(){
+    if(this.selectedItems.length == 0){
+      this.alertService.showError(MessageConstants.NOT_CHOOSE_ANY_RECORD)
+      return;
+    }
+    var id = this.selectedItems[0].id;
+    const ref = this.dialogService.open(RolesDetailComponent,{
+      data: {
+        id: id,
+      },
+      header: 'Cập nhật quyền',
+      width: '70%',
+    });
+    const dialogRef = this.dialogService.dialogComponentRefMap.get(ref);
+    const dynamicComponent = dialogRef?.instance as DynamicDialogComponent;
+    const ariaLabelledBy = dynamicComponent.getAriaLabelledBy();
+    dynamicComponent.getAriaLabelledBy = () => ariaLabelledBy;
+    ref.onClose.subscribe((data: RoleDto) => {
+      if(data){
+        this.alertService.showSuccess(MessageConstants.UPDATED_OK_MSG);
+        this.selectedItems = [];
+        this.loadData();
+      }
+    });
+  }
+  showAddModal(){
+    const ref = this.dialogService.open(RolesDetailComponent, {
+      header: 'Thêm quyền mới',
+      width: '70%',
+    });
+    const dialogRef = this.dialogService.dialogComponentRefMap.get(ref);
+    const dynamicComponent = dialogRef?.instance as DynamicDialogComponent;
+    const ariaLabelledBy = dynamicComponent.getAriaLabelledBy();
+    dynamicComponent.getAriaLabelledBy = () => ariaLabelledBy;
+    ref.onClose.subscribe((data:RoleDto)=>{
+        if(data){
+          this.alertService.showError(
+            MessageConstants.CREATED_OK_MSG
+          );
+          this.selectedItems = [];
+          this.loadData();
+        }
+    });
+  }
+
+  deleteItems(){
+    if(this.selectedItems.length == 0){
+      this.alertService.showError(
+        MessageConstants.NOT_CHOOSE_ANY_RECORD
+      );
+      return;
+    }
+    var ids = [];
+    this.selectedItems.forEach((element)=>{
+      ids.push(element.id);
+    });
+    this.confirmationService.confirm({
+        message: MessageConstants.CONFIRM_DELETE_MSG,
+        accept: () => {
+          this.deleteItemsConfirm(ids);
+        },
+    });
+  }
+  deleteItemsConfirm(ids:any[]){
+    this.toggleBlockUI(true);
+    
+    this.roleService.deleteRoles(ids).subscribe({
+      next: () => {
+        this.alertService.showSuccess(
+          MessageConstants.DELETED_OK_MSG
+        );
+        this.loadData();
+        this.selectedItems = [];
+        this.toggleBlockUI(false);
+      },
+      error: () =>{
+        this.toggleBlockUI(false)
+      }
+    });
+  }
 }
