@@ -8,8 +8,14 @@ import { Title } from '@angular/platform-browser';
 @Component({
   selector: 'app-root',
   template: `
-  <p-toast position="top-center" key="tc"></p-toast>
-  '<router-outlet></router-outlet>'`,
+  <p-toast position="top-center"></p-toast>
+  <p-confirmDialog
+  header="Xác nhận"
+  acceptLabel="Có"
+  rejectLabel="Không"
+  icon="pi pi-exclamation-triangle"
+></p-confirmDialog>
+  <router-outlet></router-outlet>`,
 })
 export class AppComponent implements OnInit {
   title = 'Tedu Blog Admin UI';

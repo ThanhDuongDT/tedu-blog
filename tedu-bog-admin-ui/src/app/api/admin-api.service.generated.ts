@@ -546,7 +546,7 @@ export class AdminApiRoleApiClient {
     /**
      * @return Success
      */
-    getRoleId(id: string): Observable<RoleDto> {
+    getRoleById(id: string): Observable<RoleDto> {
         let url_ = this.baseUrl + "/api/admin/role/{id}";
         if (id === undefined || id === null)
             throw new Error("The parameter 'id' must be defined.");
@@ -1326,7 +1326,7 @@ export enum PostStatus {
 export class RoleDto implements IRoleDto {
     id?: string;
     name?: string | undefined;
-    display?: string | undefined;
+    displayName?: string | undefined;
 
     constructor(data?: IRoleDto) {
         if (data) {
@@ -1341,7 +1341,7 @@ export class RoleDto implements IRoleDto {
         if (_data) {
             this.id = _data["id"];
             this.name = _data["name"];
-            this.display = _data["display"];
+            this.displayName = _data["displayName"];
         }
     }
 
@@ -1356,7 +1356,7 @@ export class RoleDto implements IRoleDto {
         data = typeof data === 'object' ? data : {};
         data["id"] = this.id;
         data["name"] = this.name;
-        data["display"] = this.display;
+        data["displayName"] = this.displayName;
         return data;
     }
 }
