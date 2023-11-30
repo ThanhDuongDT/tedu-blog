@@ -16,6 +16,7 @@ import { InputTextModule } from 'primeng/inputtext';
 import { RolesDetailComponent} from './roles/roles-detail.component'
 import { TeduSharedModule} from 'src/app/share/modules/tedu-shared.module'
 import { KeyFilterModule} from 'primeng/keyfilter'
+import { PermissionGrantComponent} from './roles/permission-grant.component'
 @NgModule({
   imports: [
     SystemRoutingModule,
@@ -33,7 +34,7 @@ import { KeyFilterModule} from 'primeng/keyfilter'
     SharedModule,
     TeduSharedModule
   ],
-  declarations: [UserComponent,RoleComponent, RolesDetailComponent]
+  declarations: [UserComponent,RoleComponent, RolesDetailComponent, PermissionGrantComponent]
 })
 export class SystemModule {
 }

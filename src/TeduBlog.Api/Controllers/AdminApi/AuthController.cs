@@ -84,7 +84,7 @@ namespace TeduBlog.Api.Controllers.AdminApi
             var roles = await _userManager.GetRolesAsync(user);
             var permission = new List<string>();
 
-            var allPermission = new List<RoleClaimDto>();
+            var allPermission = new List<RoleClaimsDto>();
             if (roles.Contains(Roles.Admin))
             {
                 var types = typeof(Permissions).GetTypeInfo().DeclaredNestedTypes; 
