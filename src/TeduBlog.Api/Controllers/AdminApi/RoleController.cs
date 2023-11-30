@@ -5,6 +5,8 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.SqlServer.Query.Internal;
+using System.Reflection;
+using TeduBlog.Api.Extensions;
 using TeduBlog.Api.Filters;
 using TeduBlog.Core.Domain.Identity;
 using TeduBlog.Core.Models;
@@ -100,6 +102,55 @@ namespace TeduBlog.Api.Controllers.AdminApi
         {
             var model = await _mapper.ProjectTo<RoleDto>(_roleManager.Roles).ToListAsync();
             return Ok(model);
+        }
+        [HttpGet("{roleId}/permissions")]
+        [Authorize(Permissions.Roles.View)]
+        public async Task<ActionResult<PermissionDto>> GetAllRolePermissions(string roleId)
+        {
+            var model = new PermissionDto();
+            var allPermisisons = new List<RoleClaimsDto>();
+            var types = typeof(Permissions).GetTypeInfo().DeclaredNestedTypes;
+            foreach (var type in types)
+            {
+                allPermisisons.GetPermissions(type);
+            }
+            
+            var role = await _roleManager.FindByIdAsync(roleId);
+            if(role == null)
+                return NotFound();
+            model.RoleId = roleId;
+            var claims = await _roleManager.GetClaimsAsync(role);
+            var allClaimValues = allPermisisons.Select(a => a.Value).ToList();
+            var roleClaimValue = claims.Select(a => a.Value).ToList();
+            var authorizedClaims = allClaimValues.Intersect(roleClaimValue).ToList();
+            foreach(var permisison in allPermisisons)
+            {
+                if(authorizedClaims.Any(a => a == permisison.Value))
+                {
+                    permisison.Selected = true;
+                }
+            }
+            model.RoleClaims = allPermisisons;
+            return Ok(model);
+        }
+        [HttpPut("permissions")]
+        [Authorize(Permissions.Roles.Edit)]
+        public async Task<IActionResult> SavePermisison([FromBody] PermissionDto model)
+        {
+            var role = await _roleManager.FindByIdAsync(model.RoleId);
+            if(role == null) 
+                return NotFound();
+            var claims = await _roleManager.GetClaimsAsync(role);
+            foreach(var claim in claims)
+            {
+                await _roleManager.RemoveClaimAsync(role, claim);
+            }
+            var selectedClaims = model.RoleClaims.Where(a => a.Selected).ToList();
+            foreach (var claim in selectedClaims)
+            {
+                await _roleManager.AddPermissionClaim(role, claim.Value);
+            }
+            return Ok();
         }
     }
 }

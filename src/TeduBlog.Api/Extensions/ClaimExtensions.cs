@@ -9,7 +9,7 @@ namespace TeduBlog.Api.Extensions
 {
     public static class ClaimExtensions
     {
-        public static void GetPermissions(this List<RoleClaimDto> allPermissions, Type policy)
+        public static void GetPermissions(this List<RoleClaimsDto> allPermissions, Type policy)
         {
             FieldInfo[] fields = policy.GetFields(BindingFlags.Static | BindingFlags.Public);
             foreach (FieldInfo fi in fields)
@@ -22,7 +22,7 @@ namespace TeduBlog.Api.Extensions
                     var descripton = (DescriptionAttribute)attributes[0];
                     displayName = descripton.Description;
                 }
-                allPermissions.Add(new RoleClaimDto { Value = fi.GetValue(null).ToString(),Type = "Permissions", DisplayName = displayName});
+                allPermissions.Add(new RoleClaimsDto { Value = fi.GetValue(null).ToString(),Type = "Permissions", DisplayName = displayName});
             }
         }
         public static async Task AddPermissionClaim(this RoleManager<AppRole> roleManager, AppRole role, string permission)

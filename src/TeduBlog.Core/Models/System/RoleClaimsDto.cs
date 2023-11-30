@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace TeduBlog.Core.Models.System
 {
-    public class RoleClaimDto
+    public class RoleClaimsDto
     {
         public required string Type { get; set; }
         public required string Value { get; set; }
