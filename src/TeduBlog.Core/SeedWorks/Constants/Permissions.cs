@@ -26,7 +26,7 @@ namespace TeduBlog.Core.SeedWorks.Constants
             [Description("Xóa quyền")]
             public const string Delete = "Permissions.Roles.Delete";
         }
-        public static class user
+        public static class Users
         {
             [Description("Xem người dùng")]
             public const string View = "Permissions.User.View";
