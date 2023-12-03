@@ -4,7 +4,7 @@ import { Subject, takeUntil } from 'rxjs';
 import { DialogService, DynamicDialogComponent } from 'primeng/dynamicdialog';
 import { AdminApiRoleApiClient, RoleDto, RoleDtoPagedResult } from 'src/app/api/admin-api.service.generated';
 import { AlertService } from 'src/app/share/services/alert.service';
-import { RolesDetailComponent } from './roles-detail.component';
+import { RoleDetailComponent } from './role-detail.component';
 import { MessageConstants} from '../../../share/constants/messages.constant'
 import { PermissionGrantComponent } from './permission-grant.component';
 
@@ -97,7 +97,7 @@ export class RoleComponent implements OnInit, OnDestroy {
       return;
     }
     var id = this.selectedItems[0].id;
-    const ref = this.dialogService.open(RolesDetailComponent,{
+    const ref = this.dialogService.open(RoleDetailComponent,{
       data: {
         id: id,
       },
@@ -117,7 +117,7 @@ export class RoleComponent implements OnInit, OnDestroy {
     });
   }
   showAddModal(){
-    const ref = this.dialogService.open(RolesDetailComponent, {
+    const ref = this.dialogService.open(RoleDetailComponent, {
       header: 'Thêm quyền mới',
       width: '70%',
     });

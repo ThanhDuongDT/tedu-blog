@@ -98,7 +98,7 @@ namespace TeduBlog.Api.Controllers.AdminApi
         }
         [HttpGet("all")]
         [Authorize(Permissions.Roles.View)]
-        public async Task<ActionResult<List<RoleDto>>> GetAllRole()
+        public async Task<ActionResult<List<RoleDto>>> GetAllRoles()
         {
             var model = await _mapper.ProjectTo<RoleDto>(_roleManager.Roles).ToListAsync();
             return Ok(model);
@@ -135,7 +135,7 @@ namespace TeduBlog.Api.Controllers.AdminApi
         }
         [HttpPut("permissions")]
         [Authorize(Permissions.Roles.Edit)]
-        public async Task<IActionResult> SavePermisison([FromBody] PermissionDto model)
+        public async Task<IActionResult> SavePermission([FromBody] PermissionDto model)
         {
             var role = await _roleManager.FindByIdAsync(model.RoleId);
             if(role == null) 
