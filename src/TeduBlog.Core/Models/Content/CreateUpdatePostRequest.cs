@@ -1,4 +1,5 @@
-﻿using System;
+﻿using AutoMapper;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -27,6 +28,12 @@ namespace TeduBlog.Core.Models.Content
         public string? Tags { get; set; }
 
         public string? SeoDescription { get; set; }
-
+        public class AutoMapperProfiles : Profile
+        {
+            public AutoMapperProfiles() 
+            { 
+                CreateMap<PostCategory, PostCategoryDto>();
+            }
+        }
     }
 }
