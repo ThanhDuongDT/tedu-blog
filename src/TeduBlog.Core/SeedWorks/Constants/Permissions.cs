@@ -49,7 +49,7 @@ namespace TeduBlog.Core.SeedWorks.Constants
             public const string Delete = "Permissions.PostCategories.Delete";
 
         }
-        public static class Post
+        public static class Posts
         {
             [Description("Xem bài viết")]
             public const string View = "Permissions.Posts.View";
@@ -59,6 +59,8 @@ namespace TeduBlog.Core.SeedWorks.Constants
             public const string Edit = "Permissions.Posts.Edit";
             [Description("Xóa bài viết")]
             public const string Delete = "Permissions.Posts.Delete";
+            [Description("Duyệt bài viết")]
+            public const string Approve = "Permissions.Posts.Delete";
         }
         public static class Series
         {
