@@ -32,7 +32,7 @@ namespace TeduBlog.Core.Models.Content
         {
             public AutoMapperProfiles() 
             { 
-                CreateMap<PostCategory, PostCategoryDto>();
+                CreateMap<CreateUpdatePostRequest, Post>();
             }
         }
     }

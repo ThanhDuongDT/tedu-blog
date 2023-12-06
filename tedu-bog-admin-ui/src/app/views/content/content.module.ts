@@ -19,6 +19,22 @@ import { TeduSharedModule } from 'src/app/share/modules/tedu-shared.module';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
 import { PostComponent } from './posts/post.component';
+import { PostActivityLogsComponent } from './posts/post-activity-logs.component';
+import { PostDetailComponent } from './posts/post-detail.component';
+import { PostReturnReasonComponent } from './posts/post-return-reason.component';
+import { PostSeriesComponent } from './posts/post-series.component'
+import { Dropdown } from 'primeng/dropdown';
+import { DropdownModule } from '@coreui/angular';
+import { InputNumber, InputNumberModule } from 'primeng/inputnumber';
+import { ImageModule } from 'primeng/image';
+import { DynamicDialogModule } from 'primeng/dynamicdialog';
+import { InputTextareaModule } from 'primeng/inputtextarea';
+import { EditorModule } from 'primeng/editor';
+import { AutoCompleteModule } from 'primeng/autocomplete';
+import { SeriesDetailComponent } from './series/series-detail.component'
+import { SeriesPostsComponent } from './series/series-posts.component'
+import { SeriesComponent } from './series/series.component'
+
 @NgModule({
   imports: [
     ContentRoutingModule,
@@ -36,12 +52,26 @@ import { PostComponent } from './posts/post.component';
     KeyFilterModule,
     TeduSharedModule,
     ButtonModule,
-    InputTextModule
+    InputTextModule,
+    InputTextareaModule,
+    DropdownModule,
+    EditorModule,
+    InputNumberModule,
+    ImageModule,
+    AutoCompleteModule,
+    DynamicDialogModule
   ],
   declarations: [
     PostComponent,
     PostCategoryComponent,
     PostCategoryDetailComponent,
+    PostActivityLogsComponent,
+    PostDetailComponent,
+    PostReturnReasonComponent,
+    PostSeriesComponent,
+    SeriesDetailComponent,
+    SeriesPostsComponent,
+    SeriesComponent
   ]
 })
 export class ContentModule {

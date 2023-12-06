@@ -36,26 +36,28 @@ namespace TeduBlog.Api.Controllers.AdminApi
         [HttpPost]
         public async Task<ActionResult<AuthenticatedResult>> login([FromBody] LoginRequest request)
         {
-            //Authentication
-            if(request == null)
+            try
             {
-                return BadRequest("Invalid request");
-            }
-            var user = await _userManager.FindByNameAsync(request.UserName);
-            if(user == null || user.IsActive == false || user.LockoutEnabled)
-            {
-                return Unauthorized();
-            }
-            var result = await _signInManager.PasswordSignInAsync(request.UserName, request.Password, true, false);
-            if (!result.Succeeded)
-            {
-                return Unauthorized();
-            }
-            //Authorization
-            var roles = await _userManager.GetRolesAsync(user);
-            var permissions = await this.GetPermissionByUserIdAsync(user.Id.ToString());
-            var claims = new[]
-            {
+                //Authentication
+                if (request == null)
+                {
+                    return BadRequest("Invalid request");
+                }
+                var user = await _userManager.FindByNameAsync(request.UserName);
+                if (user == null || user.IsActive == false || user.LockoutEnabled)
+                {
+                    return Unauthorized();
+                }
+                var result = await _signInManager.PasswordSignInAsync(request.UserName, request.Password, true, false);
+                if (!result.Succeeded)
+                {
+                    return Unauthorized();
+                }
+                //Authorization
+                var roles = await _userManager.GetRolesAsync(user);
+                var permissions = await this.GetPermissionByUserIdAsync(user.Id.ToString());
+                var claims = new[]
+                {
                 new Claim(JwtRegisteredClaimNames.Email, user.Email),
                 new Claim(UserClaims.Id, user.Id.ToString()),
                 new Claim(ClaimTypes.NameIdentifier, user.UserName),
@@ -65,18 +67,25 @@ namespace TeduBlog.Api.Controllers.AdminApi
                 new Claim(UserClaims.Permissions, JsonSerializer.Serialize(permissions)),
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
             };
-            var accessToken = _tokenService.GenerateAccessToken(claims);
-            var refreshToken = _tokenService.GenerateRefreshToken();
+                var accessToken = _tokenService.GenerateAccessToken(claims);
+                var refreshToken = _tokenService.GenerateRefreshToken();
 
-            user.RefreshToken = refreshToken;
-            user.RefreshTokenExpiryTime = DateTime.UtcNow.AddDays(30);
-            await _userManager.UpdateAsync(user);
+                user.RefreshToken = refreshToken;
+                user.RefreshTokenExpiryTime = DateTime.UtcNow.AddDays(30);
+                await _userManager.UpdateAsync(user);
 
-            return Ok(new AuthenticatedResult()
+                return Ok(new AuthenticatedResult()
+                {
+                    Token = accessToken,
+                    RefreshToken = refreshToken
+                });
+            }
+            catch (Exception e)
             {
-                Token = accessToken,
-                RefreshToken = refreshToken
-            });
+
+                throw;
+            }
+            
         }
         private async Task<List<string>> GetPermissionByUserIdAsync(string userId)
         {
