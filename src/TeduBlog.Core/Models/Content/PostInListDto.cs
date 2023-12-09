@@ -24,7 +24,9 @@ namespace TeduBlog.Core.Models.Content
         public required string CategoryName { set; get; }
         public string AuthorUserName { set; get; }
         public string AuthorName { set; get; }
-
+        public bool IsPaid { get; set; }
+        public double RoyaltyAmount { get; set; }
+        public DateTime? paidDate { get; set; }
         public PostStatus Status { set; get; }
         public class AutoMapperProfiles : Profile
         {
