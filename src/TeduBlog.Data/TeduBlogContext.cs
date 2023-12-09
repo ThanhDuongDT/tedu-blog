@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using TeduBlog.Core.Domain.Content;
 using TeduBlog.Core.Domain.Identity;
+using TeduBlog.Core.Domain.Royalty;
 using TeduBlog.Core.SeedWorks.Constants;
 
 namespace TeduBlog.Data
@@ -20,7 +21,7 @@ namespace TeduBlog.Data
         public DbSet<PostActivityLog> PostActivityLogs { get; set; }
         public DbSet<Series> Series { get; set; }
         public DbSet<PostInSeries> PostInSeries { get; set; }
-
+        public DbSet<Transaction> Transactions { get; set; }
         protected override void OnModelCreating(ModelBuilder builder)
         {
             builder.Entity<IdentityUserClaim<Guid>>().ToTable("AppUserClaims").HasKey(x => x.Id);
