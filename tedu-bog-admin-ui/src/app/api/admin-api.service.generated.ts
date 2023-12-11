@@ -1670,7 +1670,8 @@ export class AdminApiRoyaltyApiClient {
      * @param toYear (optional) 
      * @return Success
      */
-    getRoyaltyReportByUser(userId?: string | null | undefined, fromMonth?: number | undefined, fromYear?: number | undefined, toMonth?: number | undefined, toYear?: number | undefined): Observable<RoyaltyReportByMonthDto[]> {
+    getRoyaltyReportByUser(userId?: string | null | undefined, fromMonth?: number | undefined, fromYear?: number | undefined, toMonth?: number | undefined, toYear?: number | undefined): 
+    Observable<RoyaltyReportByUserDto[]> {
         let url_ = this.baseUrl + "/api/admin/royalty/Royalty-report-by-user?";
         if (userId !== undefined && userId !== null)
             url_ += "userId=" + encodeURIComponent("" + userId) + "&";
@@ -1707,14 +1708,14 @@ export class AdminApiRoyaltyApiClient {
                 try {
                     return this.processGetRoyaltyReportByUser(response_ as any);
                 } catch (e) {
-                    return _observableThrow(e) as any as Observable<RoyaltyReportByMonthDto[]>;
+                    return _observableThrow(e) as any as Observable<RoyaltyReportByUserDto[]>;
                 }
             } else
-                return _observableThrow(response_) as any as Observable<RoyaltyReportByMonthDto[]>;
+                return _observableThrow(response_) as any as Observable<RoyaltyReportByUserDto[]>;
         }));
     }
 
-    protected processGetRoyaltyReportByUser(response: HttpResponseBase): Observable<RoyaltyReportByMonthDto[]> {
+    protected processGetRoyaltyReportByUser(response: HttpResponseBase): Observable<RoyaltyReportByUserDto[]> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -1725,7 +1726,14 @@ export class AdminApiRoyaltyApiClient {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = RoyaltyReportByMonthDto.fromJS(resultData200);
+            if (Array.isArray(resultData200)) {
+                result200 = [] as any;
+                for (let item of resultData200)
+                    result200!.push(RoyaltyReportByUserDto.fromJS(item));
+            }
+            else {
+                result200 = <any>null;
+            }
             return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
