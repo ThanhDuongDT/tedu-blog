@@ -4,6 +4,7 @@ using TeduBlog.Core.Domain.Identity;
 using TeduBlog.Core.Repositories;
 using TeduBlog.Core.SeedWorks;
 using TeduBlog.Data.Repositories;
+using static TeduBlog.Core.SeedWorks.Constants.Permissions;
 
 namespace TeduBlog.Data.SeedWorks
 {
@@ -18,6 +19,7 @@ namespace TeduBlog.Data.SeedWorks
             PostCategories = new PostCategoryRepository(context, mapper);
             Series = new SeriesRepository(context, mapper);
             Transactions = new TransactionRepository(context, mapper);
+            Users = new UserRepository(context);
         }
         public IPostRepository Posts { get; private set; }
 
@@ -25,7 +27,7 @@ namespace TeduBlog.Data.SeedWorks
 
         public ISeriesRepository Series { get; private set; }
         public ITransactionRepository Transactions { get; private set; }
-
+        public IUserRepository Users { get; private set; }
         public async Task<int> CompleteAsync()
         {
             return await _context.SaveChangesAsync();
