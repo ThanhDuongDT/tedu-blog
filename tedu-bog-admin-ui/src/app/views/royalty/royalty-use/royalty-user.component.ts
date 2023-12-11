@@ -2,7 +2,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ConfirmationService } from 'primeng/api';
 import { DialogService } from 'primeng/dynamicdialog';
 import { Subject, takeUntil } from 'rxjs';
-import { AdminApiRoyaltyApiClient, RoyaltyReportByMonthDto, RoyaltyReportByUserDtoPagedResult } from '../../../api/admin-api.service.generated';
+import { AdminApiRoyaltyApiClient, RoyaltyReportByUserDto } from '../../../api/admin-api.service.generated';
 import { AlertService } from '../../../share/services/alert.service';
 import { MessageConstants } from '../../../share/constants/messages.constant';
 
@@ -16,7 +16,7 @@ export class RoyaltyUserComponent implements OnInit, OnDestroy {
   //System variables
   private ngUnsubscribe = new Subject<void>();
   public blockedPanel: boolean = false;
-  public items: RoyaltyReportByMonthDto[] | undefined =  [];
+  public items: RoyaltyReportByUserDto[] | undefined =  [];
   public userName: string = '';
   public fromMonth: number = 1;
   public fromYear: number = new Date().getFullYear();
@@ -43,8 +43,9 @@ export class RoyaltyUserComponent implements OnInit, OnDestroy {
     this.RoyaltyApiClient.getRoyaltyReportByUser(this.userName, this.fromMonth, this.fromYear, this.toMonth, this.toYear)
       .pipe(takeUntil(this.ngUnsubscribe))
       .subscribe({
-        next: (response: RoyaltyReportByMonthDto[]) => {
+        next: (response: RoyaltyReportByUserDto[]) => {
           this.items = response;
+          console.log(this.items)
           this.toggleBlockUI(false);
         },
         error: () => {
