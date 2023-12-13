@@ -1746,7 +1746,7 @@ export class AdminApiRoyaltyApiClient {
 
     /**
      * @param userId (optional) 
-     * @param fromMonth (optional) 
+     * @param fromMonth (optional) l
      * @param fromYear (optional) 
      * @param toMonth (optional) 
      * @param toYear (optional) 
