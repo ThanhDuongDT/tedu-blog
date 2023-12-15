@@ -32,9 +32,15 @@ namespace TeduBlog.WebApp.Controllers
         }
 
         [Route("tag/{tagSlug}")]
-        public IActionResult ListByTag([FromRoute] string tagSlug, [FromQuery] int? page = 1)
+        public async Task<IActionResult> ListByTag([FromRoute] string tagSlug, [FromQuery] int page = 1)
         {
-            return View();
+            var posts = await _unitOfWork.Posts.GetPostByCategoryPaging(tagSlug, page, 2);
+            var tag = await _unitOfWork.Tags.GetBySlug(tagSlug);
+            return View(new PostListByTagViewModel()
+            {
+                Posts = posts,
+                Tag = tag
+            });
         }
 
         [Route("post/{slug}")]
@@ -43,10 +49,12 @@ namespace TeduBlog.WebApp.Controllers
 
             var post = await _unitOfWork.Posts.GetBySlug(slug);
             var category = await _unitOfWork.PostCategories.GetBySlug(post.CategorySlug);
+            var tags = await _unitOfWork.Posts.GetTagsObjectByPostId(post.Id);
             return View(new PostDetailViewModel()
             {
                 Post = post,
-                Category = category
+                Category = category,
+                Tags = tags
             });
         }
     }

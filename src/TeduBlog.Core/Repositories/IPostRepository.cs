@@ -23,5 +23,8 @@ namespace TeduBlog.Core.Repositories
         Task<List<string>> GetAllTags();
         Task AddTagToPost(Guid postId, Guid tagId);
         Task<List<string>> GetTagsByPostId(Guid postId);
+        Task<List<TagDto>> GetTagsObjectByPostId(Guid postId);
+
+        Task<PagedResult<PostInListDto>> GetPostByTagPaging(string tagSlug, int pageIndex = 1, int pageSize = 10);
     }
 }

@@ -20,7 +20,7 @@ namespace TeduBlog.Data.SeedWorks
             Series = new SeriesRepository(context, mapper);
             Transactions = new TransactionRepository(context, mapper);
             Users = new UserRepository(context);
-            Tags = new TagRepository(context);
+            Tags = new TagRepository(context, mapper);
         }
         public IPostRepository Posts { get; private set; }
 
