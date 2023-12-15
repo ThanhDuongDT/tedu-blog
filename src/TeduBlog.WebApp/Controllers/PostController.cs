@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using TeduBlog.Core.Domain.Content;
 using TeduBlog.Core.SeedWorks;
 using TeduBlog.WebApp.Models;
 
@@ -18,7 +19,7 @@ namespace TeduBlog.WebApp.Controllers
             return View();
         }
 
-        [Route("posts/{categorySlug}")]
+        [Route("posts/{categorySlug}")] 
         public async Task<IActionResult> ListByCategory([FromRoute] string categorySlug, [FromQuery] int page = 1)
         {
             var posts = await _unitOfWork.Posts.GetPostByCategoryPaging(categorySlug, page, 2);
@@ -37,9 +38,16 @@ namespace TeduBlog.WebApp.Controllers
         }
 
         [Route("post/{slug}")]
-        public IActionResult Details([FromRoute] string slug)
+        public async Task<IActionResult> Details([FromRoute] string slug)
         {
-            return View();
+
+            var post = await _unitOfWork.Posts.GetBySlug(slug);
+            var category = await _unitOfWork.PostCategories.GetBySlug(post.CategorySlug);
+            return View(new PostDetailViewModel()
+            {
+                Post = post,
+                Category = category
+            });
         }
     }
 }
