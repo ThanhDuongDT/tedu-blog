@@ -1,6 +1,6 @@
 ﻿@model PostDetailViewModel
 @{
-    ViewData["Tittle"] = Model.Post.Name;
+    ViewData["Title"] = Model.Post.Name;
     ViewData["Description"] = Model.Post.SeoDescription;
 }
 <!-- Page Header-->
@@ -13,17 +13,8 @@
                     <h2 class="subheading">@Model.Post.Description</h2>
                     <span class="meta">
                         Posted by
-                        <a href="@string.Format(UrlConsts.Author,Model.Post.AuthorUserName)">
-                            .Select(p => new KmsPostsByCategoryDto
-                            {
-                            PostId = p.Id,
-                            KmsPostCode = p.KmsPostCode,
-                            Title = p.PostVersion.Title,
-                            Selected = false
-                            })
-                            .ToListAsync();
-                        </a>
-                        on @Model.Post.DateCreated.ToLongDateString()
+                        <a href="@string.Format(UrlConsts.Author,Model.Post.AuthorUserName)">@Model.Post.AuthorName</a>
+                        on @Model.Post.DateCreated.ToLongTimeString()
                     </span>
                 </div>
             </div>

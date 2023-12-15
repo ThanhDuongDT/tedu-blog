@@ -6,6 +6,7 @@ import { AdminApiRoyaltyApiClient, RoyaltyReportByMonthDto, RoyaltyReportByMonth
 import { AlertService } from '../../../share/services/alert.service';
 import { MessageConstants } from '../../../share/constants/messages.constant';
 
+
 @Component({
   selector: 'app-royalty-month',
   templateUrl: './royalty-month.component.html'
@@ -43,8 +44,8 @@ export class RoyaltyMonthComponent implements OnInit, OnDestroy {
     this.RoyaltyApiClient.getRoyaltyReportByMonth(this.userName, this.fromMonth, this.fromYear, this.toMonth, this.toYear)
       .pipe(takeUntil(this.ngUnsubscribe))
       .subscribe({
-        next: (response: RoyaltyReportByMonthDto[]) => {
-          this.items = response;
+        next: (response: RoyaltyReportByMonthDtoPagedResult) => {
+          this.items = response.results;
           this.toggleBlockUI(false);
         },
         error: () => {

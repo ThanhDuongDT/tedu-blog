@@ -2,7 +2,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ConfirmationService } from 'primeng/api';
 import { DialogService } from 'primeng/dynamicdialog';
 import { Subject, takeUntil } from 'rxjs';
-import { AdminApiRoyaltyApiClient, RoyaltyReportByUserDto } from '../../../api/admin-api.service.generated';
+import { AdminApiRoyaltyApiClient, RoyaltyReportByUserDto, RoyaltyReportByUserDtoPagedResult} from '../../../api/admin-api.service.generated';
 import { AlertService } from '../../../share/services/alert.service';
 import { MessageConstants } from '../../../share/constants/messages.constant';
 
@@ -43,8 +43,8 @@ export class RoyaltyUserComponent implements OnInit, OnDestroy {
     this.RoyaltyApiClient.getRoyaltyReportByUser(this.userName, this.fromMonth, this.fromYear, this.toMonth, this.toYear)
       .pipe(takeUntil(this.ngUnsubscribe))
       .subscribe({
-        next: (response: RoyaltyReportByUserDto[]) => {
-          this.items = response;
+        next: (response: RoyaltyReportByUserDtoPagedResult) => {
+          this.items = response.results;
           console.log(this.items)
           this.toggleBlockUI(false);
         },

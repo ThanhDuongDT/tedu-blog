@@ -232,8 +232,33 @@ namespace TeduBlog.Data.Repositories
         public async Task<PostDto> GetBySlug(string slug)
         {
             var post = await _context.Posts.FirstOrDefaultAsync(x => x.Slug == slug);
-            if (post != null) throw new Exception($"Cannot find post with Slug: {slug}");
+            if (post == null) throw new Exception($"Cannot find post with Slug: {slug}");
             return _mapper.Map<PostDto>(post);
+        }
+
+        public async Task<List<string>> GetAllTags()
+        {
+            var query = _context.Tags.Select(x => x.Name);
+            return await _mapper.ProjectTo<string>(query).ToListAsync();
+        }
+
+        public async Task AddTagToPost(Guid postId, Guid tagId)
+        {
+            await _context.PostTags.AddAsync(new PostTag()
+            {
+                PostId = postId,
+                TagId = tagId,
+            });
+        }
+
+        public async Task<List<string>> GetTagsByPostId(Guid postId)
+        {
+            var query = from post in _context.Posts
+                        join pt in _context.PostTags on post.Id equals pt.PostId
+                        join t in _context.Tags on pt.TagId equals t.Id
+                        where post.Id == postId
+                        select t.Name;
+            return await query.ToListAsync();
         }
     }
 }
