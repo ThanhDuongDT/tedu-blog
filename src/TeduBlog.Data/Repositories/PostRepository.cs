@@ -238,8 +238,11 @@ namespace TeduBlog.Data.Repositories
 
         public async Task<List<string>> GetAllTags()
         {
+
             var query = _context.Tags.Select(x => x.Name);
-            return await _mapper.ProjectTo<string>(query).ToListAsync();
+            return await query.ToListAsync();
+
+
         }
 
         public async Task AddTagToPost(Guid postId, Guid tagId)

@@ -232,6 +232,7 @@ namespace TeduBlog.Api.Controllers.AdminApi
             var logs = await _unitOfWork.Posts.GetAllTags();
             return Ok(logs);
         }
+
         [HttpGet("tags/{postId}")]
         [Authorize(Posts.View)]
         public async Task<ActionResult<List<string>>> GetPostTags(Guid postId)
