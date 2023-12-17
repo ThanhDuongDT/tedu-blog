@@ -21,6 +21,7 @@ builder.Services.AddControllersWithViews();
 // custom setup
 builder.Services.Configure<SystemConfig>(configuration.GetSection("SystemConfig"));
 builder.Services.AddDbContext<TeduBlogContext>(options => options.UseSqlServer(connectionString));
+#region Configure Identity
 builder.Services.AddIdentity<AppUser, AppRole>(options => options.SignIn.RequireConfirmedAccount = false)
     .AddEntityFrameworkStores<TeduBlogContext>()
                     .AddDefaultTokenProviders();
@@ -44,15 +45,19 @@ builder.Services.Configure<IdentityOptions>(options =>
     "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._@+";
     options.User.RequireUniqueEmail = true;
 });
+builder.Services.AddScoped<SignInManager<AppUser>, SignInManager<AppUser>>();
+builder.Services.AddScoped<UserManager<AppUser>, UserManager<AppUser>>();
+builder.Services.AddScoped<RoleManager<AppRole>, RoleManager<AppRole>>();
+
+builder.Services.AddScoped<IUserClaimsPrincipalFactory<AppUser>,
+    CustomClaimsPrincipalFactory>();
+#endregion
+builder.Services.AddAutoMapper(typeof(PostInListDto));
+#region Configure Services
 // Add services to the container.
 builder.Services.AddScoped(typeof(IRepository<,>), typeof(RepositoryBase<,>));
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
-builder.Services.AddAutoMapper(typeof(PostInListDto));
-
-builder.Services.AddScoped<SignInManager<AppUser>, SignInManager<AppUser>>();
-builder.Services.AddScoped<UserManager<AppUser>, UserManager<AppUser>>();
-builder.Services.AddScoped<RoleManager<AppRole>, RoleManager<AppRole>>();
 
 // Business services and repositories
 var services = typeof(PostRepository).Assembly.GetTypes()
@@ -69,11 +74,10 @@ foreach (var service in services)
     }
 }
 
-builder.Services.AddScoped<IUserClaimsPrincipalFactory<AppUser>,
-    CustomClaimsPrincipalFactory>();
-    
-        
-                    
+#endregion
+
+
+
 // start pipeline
 var app = builder.Build();
 
