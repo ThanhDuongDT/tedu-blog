@@ -1,8 +1,8 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using System.Runtime.InteropServices;
 using TeduBlog.Core.ConfigOptions;
 using TeduBlog.Core.Domain.Identity;
+using TeduBlog.Core.Events.LoginSuccessed;
 using TeduBlog.Core.Models.Content;
 using TeduBlog.Core.SeedWorks;
 using TeduBlog.Data;
@@ -11,20 +11,25 @@ using TeduBlog.Data.SeedWorks;
 using TeduBlog.WebApp.Helpers;
 
 var builder = WebApplication.CreateBuilder(args);
+
 var configuration = builder.Configuration;
 var connectionString = configuration.GetConnectionString("DefaultConnection");
-builder.Configuration.AddJsonFile("appsetings.json", optional: true, reloadOnChange: true)
-                        .AddJsonFile($"appsettings.{builder.Environment.EnvironmentName}.json", optional: true);
+builder.Configuration.AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
+                      .AddJsonFile($"appsettings.{builder.Environment.EnvironmentName}.json", optional: true);
+
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
-// custom setup
+//Custom setup
 builder.Services.Configure<SystemConfig>(configuration.GetSection("SystemConfig"));
+
 builder.Services.AddDbContext<TeduBlogContext>(options => options.UseSqlServer(connectionString));
+
 #region Configure Identity
 builder.Services.AddIdentity<AppUser, AppRole>(options => options.SignIn.RequireConfirmedAccount = false)
     .AddEntityFrameworkStores<TeduBlogContext>()
-                    .AddDefaultTokenProviders();
+                  .AddDefaultTokenProviders();
+
 builder.Services.Configure<IdentityOptions>(options =>
 {
     // Password settings.
@@ -45,20 +50,22 @@ builder.Services.Configure<IdentityOptions>(options =>
     "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._@+";
     options.User.RequireUniqueEmail = true;
 });
+
 builder.Services.AddScoped<SignInManager<AppUser>, SignInManager<AppUser>>();
 builder.Services.AddScoped<UserManager<AppUser>, UserManager<AppUser>>();
 builder.Services.AddScoped<RoleManager<AppRole>, RoleManager<AppRole>>();
 
 builder.Services.AddScoped<IUserClaimsPrincipalFactory<AppUser>,
-    CustomClaimsPrincipalFactory>();
+   CustomClaimsPrincipalFactory>();
 #endregion
+
 builder.Services.AddAutoMapper(typeof(PostInListDto));
+builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(LoginSuccessedEvent).Assembly));
+
 #region Configure Services
 // Add services to the container.
 builder.Services.AddScoped(typeof(IRepository<,>), typeof(RepositoryBase<,>));
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
-
-
 // Business services and repositories
 var services = typeof(PostRepository).Assembly.GetTypes()
     .Where(x => x.GetInterfaces().Any(i => i.Name == typeof(IRepository<,>).Name)
@@ -76,9 +83,7 @@ foreach (var service in services)
 
 #endregion
 
-
-
-// start pipeline
+//Start pipeline
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -93,8 +98,8 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
-
 app.UseAuthentication();
+
 app.UseAuthorization();
 
 app.MapControllerRoute(
