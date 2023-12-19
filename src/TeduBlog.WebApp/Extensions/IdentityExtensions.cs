@@ -1,7 +1,7 @@
 ﻿using System.Security.Claims;
 using TeduBlog.Core.SeedWorks.Constants;
 
-namespace TeduBlog.WebApp.Models.Extensions
+namespace TeduBlog.WebApp.Extensions
 {
     public static class IdentityExtensions
     {
@@ -20,7 +20,7 @@ namespace TeduBlog.WebApp.Models.Extensions
             var subjectId = claimsPrincipal.GetSpecificClaim(ClaimTypes.Email);
             return subjectId;
         }
-        public static string GetSpecificClaim(this ClaimsPrincipal claimsPrincipal, string claimType) 
+        public static string GetSpecificClaim(this ClaimsPrincipal claimsPrincipal, string claimType)
         {
             var claim = ((ClaimsIdentity)claimsPrincipal.Identity)?.Claims.FirstOrDefault(x => x.Type == claimType);
             return claim != null ? claim.Value : null;
