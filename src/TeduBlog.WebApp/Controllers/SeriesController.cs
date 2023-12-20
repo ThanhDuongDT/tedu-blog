@@ -17,7 +17,7 @@ namespace TeduBlog.WebApp.Controllers
             var series = await _unitOfWork.Series.GetAllPaging(string.Empty,page);
             return View(series);
         }
-        [Route("seriess/{slug}")]
+        [Route("series/{slug}")]
         public async Task<IActionResult> Details([FromRoute] string slug) 
         {
             var posts = await _unitOfWork.Series.GetAllPostsInSeries(slug);
