@@ -106,6 +106,14 @@ namespace TeduBlog.WebApp.Controllers
             }
             return View();
         }
+
+        [HttpGet]
+        [Route("forgot-password")]
+        public IActionResult ForgotPassword()
+        {
+            return View();
+        }
+
         [HttpPost]
         [Route("forgot-password")]
         [AllowAnonymous]
