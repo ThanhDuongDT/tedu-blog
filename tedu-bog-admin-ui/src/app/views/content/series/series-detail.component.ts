@@ -1,4 +1,4 @@
-import { Component, OnInit, EventEmitter, OnDestroy } from '@angular/core';
+import { Component, OnInit, EventEmitter, OnDestroy, ChangeDetectorRef } from '@angular/core';
 import { Validators, FormControl, FormGroup, FormBuilder } from '@angular/forms';
 import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { Subject, takeUntil } from 'rxjs';
@@ -33,7 +33,8 @@ export class SeriesDetailComponent implements OnInit, OnDestroy {
     private utilService: UtilityService,
     private fb: FormBuilder,
     private seriesApiClient: AdminApiSeriesApiClient,
-    private uploadService: UploadService
+    private uploadService: UploadService,
+    private cdr: ChangeDetectorRef
   ) { }
   ngOnDestroy(): void {
     if (this.ref) {
@@ -78,6 +79,7 @@ export class SeriesDetailComponent implements OnInit, OnDestroy {
           this.selectedEntity = response;
           this.buildForm();
           this.toggleBlockUI(false);
+          this.cdr.detectChanges();
         },
         error: () => {
           this.toggleBlockUI(false);
