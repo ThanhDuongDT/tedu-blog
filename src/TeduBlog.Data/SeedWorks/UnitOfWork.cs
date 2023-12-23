@@ -21,11 +21,12 @@ namespace TeduBlog.Data.SeedWorks
             Transactions = new TransactionRepository(context, mapper);
             Users = new UserRepository(context);
             Tags = new TagRepository(context, mapper);
+            PostTags = new PostTagRepository(context);
         }
         public IPostRepository Posts { get; private set; }
 
         public IPostCategoryRepository PostCategories { get; private set; }
-
+        public IPostTagRepository PostTags { get; private set; }
         public ISeriesRepository Series { get; private set; }
         public ITransactionRepository Transactions { get; private set; }
         public IUserRepository Users { get; private set; }
@@ -34,7 +35,14 @@ namespace TeduBlog.Data.SeedWorks
 
         public async Task<int> CompleteAsync()
         {
-            return await _context.SaveChangesAsync();
+            try
+            {
+                return await _context.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception();
+            }
         }
 
         public void Dispose()

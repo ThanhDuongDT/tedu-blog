@@ -115,14 +115,18 @@ namespace TeduBlog.Api.Controllers.AdminApi
                     {
                         tagId = Guid.NewGuid();
                         _unitOfWork.Tags.Add(new Tag() { Id = tagId, Name = tagName, Slug = tagSlug });
-
                     }
                     else
                     {
-                        tagId = tag.Id;
+                        // post has/has not tag
+                        var tagInPost = _unitOfWork.PostTags.GetTagByPostId(id, tag.Id);
+                        if (tagInPost == null)
+                        {
+                            tagId = tag.Id;
+                        } 
+                        else continue;
                     }
                     await _unitOfWork.Posts.AddTagToPost(id, tagId);
-
                 }
             }
             await _unitOfWork.CompleteAsync();
@@ -132,7 +136,7 @@ namespace TeduBlog.Api.Controllers.AdminApi
 
         [HttpDelete]
         [Authorize(Posts.Delete)]
-        public async Task<IActionResult> DeletePosts([FromQuery] Guid[] ids)
+        public async Task<IActionResult>DeletePosts([FromQuery] Guid[] ids)
         {
             foreach (var id in ids)
             {
