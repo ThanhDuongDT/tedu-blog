@@ -6,6 +6,7 @@ namespace TeduBlog.Core.SeedWorks
     {
         IPostRepository Posts { get; }
         IPostCategoryRepository PostCategories { get; }
+        IPostTagRepository PostTags { get; }
         ISeriesRepository Series { get; }
         ITransactionRepository Transactions { get; }
         IUserRepository Users { get; }
